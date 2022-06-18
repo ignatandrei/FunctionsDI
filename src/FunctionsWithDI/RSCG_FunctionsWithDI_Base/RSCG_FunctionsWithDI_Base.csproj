@@ -19,12 +19,12 @@
 		<Version>2022.5.25.1154</Version>
 		<PackageVersion>2022.5.25.1154</PackageVersion>
 		<Authors>Andrei Ignat</Authors>
-		<Description>Containing the base classes for everything in RSCG_AMS</Description>
+		<Description>Containing the base classes for everything in RSCG_DIFunction</Description>
 		<Title>AboutMySoftware Base</Title>
 		<PackageTags>C#;.NET;ASP.NET Core;Roslyn;RSCG</PackageTags>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
-		<RepositoryUrl>https://github.com/ignatandrei/RSCG_AMS</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/ignatandrei/RSCG_AMS</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/ignatandrei/RSCG_DIFunction</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/ignatandrei/RSCG_DIFunction</PackageProjectUrl>
 		<RepositoryType>GIT</RepositoryType>
 		<Copyright>MIT</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>

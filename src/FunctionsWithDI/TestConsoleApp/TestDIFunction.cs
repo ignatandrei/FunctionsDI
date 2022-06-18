@@ -29,9 +29,14 @@ namespace TestFunctionsWithDI
         {
             return false;
         }
+
         public bool TestMyFunc5(int x, int y)
         {
             return false;
+        }
+        public void TestMyFunc6([FromServices] TestDI1 t1, [FromServices] TestDI2 t2)
+        {
+            return ;
         }
     }
 }

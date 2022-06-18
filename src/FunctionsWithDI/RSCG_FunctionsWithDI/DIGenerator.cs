@@ -31,7 +31,7 @@ namespace RSCG_FunctionsWithDI
             
             x++;
             Dictionary<ClassDeclarationSyntax, List<MethodDeclarationSyntax>> data = new();
-            List<ParameterSyntax> paramsDI = new();
+            List<ParameterSyntax> paramsDIAll = new();
             
             foreach(var mds in mets)
             {
@@ -56,7 +56,7 @@ namespace RSCG_FunctionsWithDI
                     if (!IsForDI(ps))
                         continue;
 
-                    paramsDI.Add(ps);
+                    paramsDIAll.Add(ps);
 
                 }
             }
@@ -84,7 +84,7 @@ namespace RSCG_FunctionsWithDI
                 str +=$"public partial class {nameClass}{nl}";
                 str += $"{{ {nl}";
 
-                var types = paramsDI.Select(it => it.Type).ToArray();
+                var types = paramsDIAll.Select(it => it.Type).ToArray();
                 var arr = types
                     .Select(it => it as IdentifierNameSyntax)
                     .Where(it => it != null)
@@ -112,8 +112,47 @@ namespace RSCG_FunctionsWithDI
                 str += $"{nl} }} //end constructor {nl}";
                 foreach (var mds in cds.Value)
                 {
-                    string nameMethod = c.Identifier.Text; 
+                    string nameMethod = mds.Identifier.Text; 
                     str += $"{nl}//making call to {nameMethod}";
+                    var ret = mds.ReturnType;
+                    string? nameRet = "";
+                    bool isVoid = false;
+                    if (ret is PredefinedTypeSyntax pts)
+                    {
+                        isVoid = pts.Keyword.Text?.ToLower() == "void";
+                        nameRet = pts.Keyword.Text;
+                    };
+                    
+                    str += $"{nl}public {nameRet} {nameMethod}";
+                    var parametersMethod = mds
+                        .ParameterList
+                        .Parameters;
+                    var parametersDI = parametersMethod
+                        .Where(it => paramsDIAll.Contains(it))
+                        .Select(it => new { it.Identifier.Text, type = it.Type.ToFullString() })
+                        .ToArray();
+
+
+                    var parametersNoDI = parametersMethod
+                        .Where(it => !paramsDIAll.Contains(it))
+                        .Select(it => new { it.Identifier.Text, type = it.Type.ToFullString() })
+                        .ToArray();
+                    
+
+                    var dataParams = string.Join(",", parametersNoDI.Select(it => $"{it.type} {it.Text}"));
+                    str += $"({dataParams}){{ {nl}";
+                    foreach(var item in parametersDI)
+                    {
+                        str += $"var {item.Text} = this._{item.type} ;{nl}";
+                    }
+                    var returnString = isVoid ? " " : "return ";
+                    var allArgs= parametersMethod
+                        .Select(it => new { it.Identifier.Text, type = it.Type.ToFullString() })
+                        .Select(it => $"{it.Text}")
+                        .ToArray();
+                    var allArgsString = string.Join(",", allArgs);
+                    str += $"{returnString} {nameMethod}({allArgsString});{nl}";
+                    str += $"}}{nl}";
                 }
                 str += $"{nl} }}//class";
                 str += $"{nl} }}//namespace";
