@@ -39,6 +39,8 @@ namespace RSCG_FunctionsWithDI
                 while(p as ClassDeclarationSyntax is null)
                 {
                     p = p?.Parent;
+                    if (p== null)//something wrong
+                        break;
                 }
                 var cds = p as ClassDeclarationSyntax;
                 if (!data.ContainsKey(cds))
@@ -129,6 +131,8 @@ namespace RSCG_FunctionsWithDI
             while(parent as MethodDeclarationSyntax is null)
             {
                 parent = parent?.Parent;
+                if (parent == null)//something wrong
+                    break;
             }
             return parent as MethodDeclarationSyntax;
             
