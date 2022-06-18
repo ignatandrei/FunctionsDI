@@ -19,20 +19,20 @@ namespace TestFunctionsWithDI
         }
         public bool TestMyFunc2([FromServices] TestDI1 t1,  int x, int y)
         {
-            return false;
+            return true;
         }
         public bool TestMyFunc3([FromServices] TestDI1 t1, [FromServices] TestDI2 t2,  int y)
         {
-            return false;
+            return true;
         }
         public bool TestMyFunc4([FromServices] TestDI1 t1, [FromServices] TestDI2 t2)
         {
-            return false;
+            return true;
         }
 
         public bool TestMyFunc5(int x, int y)
         {
-            return false;
+            return true;
         }
         public void TestMyFunc6([FromServices] TestDI1 t1, [FromServices] TestDI2 t2)
         {
