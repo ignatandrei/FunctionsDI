@@ -4,9 +4,9 @@ using TestFunctionsWithDI;
 
 Console.WriteLine("Hello, World!");
 var services = new ServiceCollection();
-services.AddScoped<TestDIFunction>();
-services.AddScoped<TestDI1>();
-services.AddScoped<TestDI2>();
+services.AddSingleton<TestDIFunction>();
+services.AddSingleton<TestDI1>();
+services.AddSingleton<TestDI2>();
 var b = services.BuildServiceProvider();
 var test=b.GetService<TestDIFunction>();
 Console.WriteLine(test.TestMyFunc1(10,3));

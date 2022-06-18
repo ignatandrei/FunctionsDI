@@ -102,7 +102,7 @@ namespace RSCG_FunctionsWithDI
                 //ctor vs services passing to ctor
                 //dictionary of dependencies with enum
 
-                var paramsConstructor = string.Join(",", arr.Select(it => it.type +" _"+ it.name).ToArray());
+                var paramsConstructor = string.Join(",", arr.Select(it => it.type +" "+ it.name).ToArray());
                 str += $"{nl}({paramsConstructor}){nl} {{ {nl}";
 
                 foreach (var item in arr)
@@ -144,6 +144,7 @@ namespace RSCG_FunctionsWithDI
                     foreach(var item in parametersDI)
                     {
                         str += $"var {item.Text} = this._{item.type} ;{nl}";
+                        str += $"if({item.Text} == null) throw new ArgumentException(\" service {item.type} is null in {nameClass} \");{nl}";
                     }
                     var returnString = isVoid ? " " : "return ";
                     var allArgs= parametersMethod
