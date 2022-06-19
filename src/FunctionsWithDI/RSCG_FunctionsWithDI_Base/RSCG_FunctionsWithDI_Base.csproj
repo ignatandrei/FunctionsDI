@@ -7,9 +7,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AMS_Base" Version="2022.5.25.1154" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="RSCG_AMS" Version="2022.5.25.1154" />
 		<PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
 		
 	</ItemGroup>
@@ -24,6 +22,7 @@
 		<Version>2022.6.19.949</Version>
 		<PackageVersion>2022.6.19.949</PackageVersion>
 		<Authors>Andrei Ignat</Authors>
+		<PackageIcon>di.png</PackageIcon>
 		<Description>Containing the base classes for everything in RSCG_DIFunction</Description>
 		<Title>RSCG_FunctionsWithDI_Base</Title>
 		<PackageTags>C#;.NET;ASP.NET Core;Roslyn;RSCG;FromServices</PackageTags>
