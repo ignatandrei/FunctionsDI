@@ -1,7 +1,9 @@
 # FunctionsDI
 
-DI for functions
+[![Nuget](https://img.shields.io/nuget/v/RSCG_FunctionsWithDI)](https://www.nuget.org/packages/RSCG_FunctionsWithDI)
 
+Generate (constructor) and functions calls similar with ASP.NET Core WebAPI ( [FromServices] will be provided by DI )
+Also, verifies for null  .
 
 # Usage
 
@@ -36,9 +38,7 @@ public partial class TestDIFunction
 { 
 private TestDI1 _TestDI1;
 private TestDI2 _TestDI2;
-public TestDIFunction  
-
-(TestDI1 _TestDI1,TestDI2 _TestDI2)
+public TestDIFunction  (TestDI1 _TestDI1,TestDI2 _TestDI2) //constructor generated with needed DI
  { 
 this._TestDI1=_TestDI1;
 this._TestDI2=_TestDI2;
@@ -56,3 +56,10 @@ return  TestMyFunc1(t1,t2,x,y);
 
 ```
 
+so you can call 
+```csharp
+
+var test=serviceProvider.GetService<TestDIFunction>();
+Console.WriteLine(test.TestMyFunc1(10,3)); // calling without the [FromServices] arguments
+
+```
