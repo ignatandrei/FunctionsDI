@@ -33,7 +33,7 @@
 		<Description>Generate correct functions from  [FromServices] </Description>
 		<Title>RSCG_FunctionsWithDI</Title>
 		<PackageTags>C#;.NET;ASP.NET Core;Roslyn;RSCG;FromServices</PackageTags>
-		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/ignatandrei/RSCG_DIFunction</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/ignatandrei/RSCG_DIFunction</PackageProjectUrl>
 		<RepositoryType>GIT</RepositoryType>
