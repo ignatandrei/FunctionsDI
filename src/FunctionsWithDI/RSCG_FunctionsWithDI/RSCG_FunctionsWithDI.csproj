@@ -24,12 +24,14 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-		<None Include="..\..\..\README.md" Pack="true" PackagePath="\" />
+		<None Include="../../../README.md" Pack="true" PackagePath="\" />
+		<None Include="../../../docs/di.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<PropertyGroup>
 		<Version>2022.6.19.949</Version>
 		<PackageVersion>2022.6.19.949</PackageVersion>
 		<Authors>Andrei Ignat</Authors>
+		<PackageIcon>di.png</PackageIcon>
 		<Description>Generate correct functions from  [FromServices] </Description>
 		<Title>RSCG_FunctionsWithDI</Title>
 		<PackageTags>C#;.NET;ASP.NET Core;Roslyn;RSCG;FromServices</PackageTags>
