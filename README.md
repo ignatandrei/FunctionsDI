@@ -27,6 +27,7 @@ public partial class TestDIFunction
     {
         return true;
     }
+    //more functions
 }
 ```
 
