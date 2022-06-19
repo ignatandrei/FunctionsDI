@@ -1,8 +1,18 @@
 # FunctionsDI
+
 DI for functions
 
 
-#Usage
+# Usage
+
+Reference into the csproj
+```xml
+<ItemGroup>
+    <PackageReference Include="RSCG_FunctionsWithDI" Version="2022.6.19.949" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+    <PackageReference Include="RSCG_FunctionsWithDI_Base" Version="2022.6.19.949" />
+</ItemGroup>	
+```
+
 ```csharp
     public partial class TestDIFunction
     {
