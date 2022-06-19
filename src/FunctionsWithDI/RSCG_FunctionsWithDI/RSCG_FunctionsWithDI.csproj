@@ -30,9 +30,9 @@
 		<Version>2022.5.25.1154</Version>
 		<PackageVersion>2022.5.25.1154</PackageVersion>
 		<Authors>Andrei Ignat</Authors>
-		<Description>Containing the base classes for everything in RSCG_DIFunction</Description>
-		<Title>AboutMySoftware Base</Title>
-		<PackageTags>C#;.NET;ASP.NET Core;Roslyn;RSCG</PackageTags>
+		<Description>Generate correct functions from  [FromServices] </Description>
+		<Title>RSCG_FunctionsWithDI</Title>
+		<PackageTags>C#;.NET;ASP.NET Core;Roslyn;RSCG;FromServices</PackageTags>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/ignatandrei/RSCG_DIFunction</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/ignatandrei/RSCG_DIFunction</PackageProjectUrl>
