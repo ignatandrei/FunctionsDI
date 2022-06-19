@@ -36,8 +36,8 @@
 		<Title>RSCG_FunctionsWithDI</Title>
 		<PackageTags>C#;.NET;ASP.NET Core;Roslyn;RSCG;FromServices</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<RepositoryUrl>https://github.com/ignatandrei/RSCG_DIFunction</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/ignatandrei/RSCG_DIFunction</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/ignatandrei/functionsdi</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/ignatandrei/functionsdi</PackageProjectUrl>
 		<RepositoryType>GIT</RepositoryType>
 		<Copyright>MIT</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
