@@ -21,13 +21,13 @@ Then for every class you can write [FromServices]
 ```csharp
 using RSCG_FunctionsWithDI_Base;
 //namespace if necessary
-    public partial class TestDIFunction
+public partial class TestDIFunction
+{
+    public bool TestMyFunc1([FromServices] TestDI1 t1, [FromServices] TestDI2 t2, int x, int y)
     {
-        public bool TestMyFunc1([FromServices] TestDI1 t1, [FromServices] TestDI2 t2, int x, int y)
-        {
-            return true;
-        }
-	}
+        return true;
+    }
+}
 ```
 
 generates the constructor with needed details 
