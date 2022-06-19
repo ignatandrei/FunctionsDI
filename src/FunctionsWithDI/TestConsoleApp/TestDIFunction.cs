@@ -17,11 +17,11 @@ namespace TestFunctionsWithDI
         {
             return true;
         }
-        public bool TestMyFunc2([FromServices] TestDI1 t1,  int x, int y)
+        public bool TestMyFunc2([FromServices] TestDI1 t12,  int x, int y)
         {
             return true;
         }
-        public bool TestMyFunc3([FromServices] TestDI1 t1, [FromServices] TestDI2 t2,  int y)
+        public bool TestMyFunc3([FromServices] TestDI1 t15, [FromServices] TestDI2 t2,  int y)
         {
             return true;
         }
