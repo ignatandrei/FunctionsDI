@@ -17,10 +17,13 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 6.0.x
+
     - name: Restore dependencies
       run: |
         cd src
         cd FunctionsWithDI
+        dotnet tool restore
+        dotnet pwsh readme.ps1
         dotnet restore
     - name: Build
       run: |
@@ -33,3 +36,27 @@ jobs:
         cd FunctionsWithDI
         cd TestConsoleApp
         dotnet run  --no-build
+
+    - name: create package
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: |
+        cd src 
+        cd FunctionsWithDI
+        echo 'now aop'
+        #dotnet pwsh AOPMethod.ps1
+        #dotnet clean  
+        #dotnet build
+        echo 'now pack'
+        dotnet pack RSCG_FunctionsWithDI/RSCG_FunctionsWithDI.csproj                        -o nugetPackages  --include-symbols --include-source 
+        dotnet pack RSCG_FunctionsWithDI_Base/RSCG_FunctionsWithDI_Base.csproj              -o nugetPackages  --include-symbols --include-source
+
+
+    - name: 'Upload nuget'
+      if: ${{ github.ref == 'refs/heads/main' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: RSCG_FunctionsWithDI_${{github.run_number}}
+        path: src/FunctionsWithDI/nugetPackages
+        retention-days: 1
+  
+  
