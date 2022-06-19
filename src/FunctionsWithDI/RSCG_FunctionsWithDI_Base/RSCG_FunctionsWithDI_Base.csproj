@@ -15,11 +15,14 @@
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 		<!--<None Include="..\..\..\README.md" Link="README.md" />-->
 		<None Include="..\..\..\README.md" Pack="true" PackagePath="\" />
+		<None Include="../../../docs/di.png" Pack="true" PackagePath="\" />
+
 	</ItemGroup>
 	<PropertyGroup>
-		<Version>2022.6.19.949</Version>
-		<PackageVersion>2022.6.19.949</PackageVersion>
+		<Version>2022.6.19.1605</Version>
+		<PackageVersion>2022.6.19.1605</PackageVersion>
 		<Authors>Andrei Ignat</Authors>
+		<PackageIcon>di.png</PackageIcon>
 		<Description>Containing the base classes for everything in RSCG_DIFunction</Description>
 		<Title>RSCG_FunctionsWithDI_Base</Title>
 		<PackageTags>C#;.NET;ASP.NET Core;Roslyn;RSCG;FromServices</PackageTags>

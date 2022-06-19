@@ -6,14 +6,19 @@ DI for functions
 # Usage
 
 Reference into the csproj
+
 ```xml
 <ItemGroup>
-    <PackageReference Include="RSCG_FunctionsWithDI" Version="2022.6.19.949" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
-    <PackageReference Include="RSCG_FunctionsWithDI_Base" Version="2022.6.19.949" />
+    <PackageReference Include="RSCG_FunctionsWithDI" Version="2022.6.19.1605" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+    <PackageReference Include="RSCG_FunctionsWithDI_Base" Version="2022.6.19.1605" />
 </ItemGroup>	
 ```
 
+Then for every class you can write [FromServices]
+
 ```csharp
+using RSCG_FunctionsWithDI_Base;
+//namespace if necessary
     public partial class TestDIFunction
     {
         public bool TestMyFunc1([FromServices] TestDI1 t1, [FromServices] TestDI2 t2, int x, int y)
@@ -23,7 +28,7 @@ Reference into the csproj
 	}
 ```
 
-generates 
+generates the constructor with needed details 
 
 ```csharp
 
@@ -50,3 +55,4 @@ return  TestMyFunc1(t1,t2,x,y);
 }
 
 ```
+
