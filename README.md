@@ -13,8 +13,7 @@ Reference into the csproj
 <ItemGroup>
     <PackageReference Include="RSCG_FunctionsWithDI" Version="2022.7.4.34" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     <PackageReference Include="RSCG_FunctionsWithDI_Base" Version="2022.7.4.34" />
-</ItemGroup>
-<!-- add this to see files generated --> 	
+</ItemGroup> 	
 <PropertyGroup>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 		<CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)GeneratedX</CompilerGeneratedFilesOutputPath>
@@ -77,7 +76,6 @@ Console.WriteLine(test.TestMyFunc1(10,3)); // calling without the [FromServices]
     <PackageReference Include="RSCG_FunctionsWithDI" Version="2022.7.4.34" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     <PackageReference Include="RSCG_FunctionsWithDI_Base" Version="2022.7.4.34" />
 </ItemGroup>	
-<!-- add this to see files generated --> 	
 <PropertyGroup>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 		<CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)GeneratedX</CompilerGeneratedFilesOutputPath>
