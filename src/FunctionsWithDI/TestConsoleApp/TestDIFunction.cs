@@ -21,11 +21,11 @@ namespace TestFunctionsWithDI
         private TestDI1 NewTestDI1;
 
         [RSCG_FunctionsWithDI_Base.FromServices]
-        private TestDI2 NewTestDI2 { get; set; }
+        public TestDI2 NewTestDI2 { get; set; }
 
-        private readonly TestDI3 myTestDI3;
+        public readonly TestDI3 myTestDI3;
 
-        public TestDIFunctionAdvWithConstructor(TestDI3 test)
+        private TestDIFunctionAdvWithConstructor(TestDI3 test)
         {
             myTestDI3= test;
         }
@@ -34,7 +34,7 @@ namespace TestFunctionsWithDI
     public partial class TestDIFunctionAdvNoConstructor
     {
         [RSCG_FunctionsWithDI_Base.FromServices]
-        private TestDI1 NewTestDI1;
+        public TestDI1 NewTestDI1;
 
         [RSCG_FunctionsWithDI_Base.FromServices]
         private TestDI2 NewTestDI2 { get; set; }

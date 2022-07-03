@@ -120,7 +120,7 @@ namespace RSCG_FunctionsWithDI
                     args += ")";
 
                     str += $"public {nameClass}   {nl}";
-                    str += $"{args} : this {argsConstructorBase} {nl}";
+                    str += $"{args} : this ({argsConstructorBase}) {nl}";
                     str += $"{{ {nl}";
                     foreach (var kvp in nameAndType)
                     {
