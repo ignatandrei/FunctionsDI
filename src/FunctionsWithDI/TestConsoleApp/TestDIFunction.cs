@@ -15,21 +15,33 @@ namespace TestFunctionsWithDI
     {
         public int x;
     }
-    public partial class TestDIFunctionAdv
+    public partial class TestDIFunctionAdvWithConstructor
     {
         [RSCG_FunctionsWithDI_Base.FromServices]
-        private TestDI3 NewTestDI3;
+        private TestDI1 NewTestDI1;
 
         [RSCG_FunctionsWithDI_Base.FromServices]
         private TestDI2 NewTestDI2 { get; set; }
 
         private readonly TestDI3 myTestDI3;
-        protected TestDIFunctionAdv(TestDI3 myTestDI3)
-        {
-            this.myTestDI3 = myTestDI3;
-        }
 
+        public TestDIFunctionAdvWithConstructor(TestDI3 test)
+        {
+            myTestDI3= test;
+        }
         
+    }
+    public partial class TestDIFunctionAdvNoConstructor
+    {
+        [RSCG_FunctionsWithDI_Base.FromServices]
+        private TestDI1 NewTestDI1;
+
+        [RSCG_FunctionsWithDI_Base.FromServices]
+        private TestDI2 NewTestDI2 { get; set; }
+
+
+
+
     }
     public partial class TestDIFunction
     {

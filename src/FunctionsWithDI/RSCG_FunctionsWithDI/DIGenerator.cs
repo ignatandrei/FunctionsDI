@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RSCG_FunctionsWithDI_Base;
 using System;
@@ -93,6 +94,41 @@ namespace RSCG_FunctionsWithDI
                 if (existsConstructor == 1)
                 {
 
+                    var paramsList = constructor!.ParameterList;
+                    var args = paramsList.ToFullString();
+                    var argsConstructorBase = 
+                        string.Join(",",
+                        paramsList.Parameters
+                        .Select(it=>it.Identifier.ValueText)
+                        .ToArray()
+                        )
+                        ;
+                    //remove )
+                    while (!args.EndsWith(")"))
+                    {
+                        args = args.Substring(0, args.Length - 1);
+                    }
+                    args = args.Substring(0, args.Length - 1);
+                    foreach (var item in nameAndType)
+                    {
+                        //var p = SyntaxFactory
+                        //    .Parameter(SyntaxFactory.Identifier($"_{item.Key}"))
+                        //    .WithType(SyntaxFactory.ParseTypeName(item.Value));
+                        //paramsList.Parameters.Add(p);
+                        args += $", {item.Value} _{item.Key}";
+                    }
+                    args += ")";
+
+                    str += $"public {nameClass}   {nl}";
+                    str += $"{args} : this {argsConstructorBase} {nl}";
+                    str += $"{{ {nl}";
+                    foreach (var kvp in nameAndType)
+                    {
+                        str += $"this.{kvp.Key} = _{kvp.Key}; {nl}";
+                    }
+                    str += $"}}//end constructor {nl}";
+
+
                 }
                 else
                 {
@@ -100,11 +136,15 @@ namespace RSCG_FunctionsWithDI
                     var strParameters = 
                         string.Join(",",
                         nameAndType
-                        .Select(it => it.Value + " " + it.Key)
+                        .Select(it => it.Value + " _" + it.Key)
                         .ToArray()
                         );
                     str += $"( {strParameters} ) {nl}";
                     str += $"{{ {nl}";
+                    foreach(var kvp in nameAndType)
+                    {
+                        str+=$"this.{kvp.Key} = _{kvp.Key}; {nl}";
+                    }
                     str += $"}}//end constructor {nl}";
 
                 }
