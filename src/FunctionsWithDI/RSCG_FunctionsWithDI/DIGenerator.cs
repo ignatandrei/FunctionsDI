@@ -12,18 +12,119 @@ namespace RSCG_FunctionsWithDI
         static string nameAttr = nameof(FromServices);
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
+
+            CreateForMethods(context);
+            CreateForClass(context);
+
+
+        }
+        private void CreateForClass(IncrementalGeneratorInitializationContext context)
+        {
+            var paramDeclarations = context.SyntaxProvider
+            .CreateSyntaxProvider(
+                predicate: static (s, _) => IsSyntaxTargetForGenerationClass(s),
+                transform: static (ctx, _) => GetSemanticTargetForGenerationClass(ctx))
+            .Where(static m => m is not null)!; 
+
+            var compilationAndEnums = context.CompilationProvider.Combine(paramDeclarations.Collect());
+
+            context.RegisterSourceOutput(compilationAndEnums,
+                static (spc, source) => ExecuteForClass(source.Item1, source.Item2, spc));
+
+        }
+
+        private static void ExecuteForClass(Compilation item1, ImmutableArray<ClassDeclarationSyntax> cdsArr, SourceProductionContext context)
+        {
+            Dictionary<ClassDeclarationSyntax, List<MemberDeclarationSyntax>> data = new();
+            foreach (var cds in cdsArr)
+            {
+                //find the constructor , as any
+                var existsConstructor = 0;
+                ConstructorDeclarationSyntax? constructor= null;
+                data.Add(cds, new List<MemberDeclarationSyntax>());
+                foreach (var child in cds.ChildNodes())
+                {
+                    if(child is ConstructorDeclarationSyntax cdsChild)
+                    {
+                        existsConstructor++;
+                        constructor = cdsChild;
+                        continue;
+                    }
+                    if(child is FieldDeclarationSyntax fds)
+                    {
+                        if (!IsForDI(fds))
+                            continue;
+                        data[cds].Add(fds);
+                    }
+                    if (child is PropertyDeclarationSyntax mds)
+                    {
+                        if (!IsForDI(mds))
+                            continue;
+                        data[cds].Add(mds);
+                    }
+                }
+
+                if (existsConstructor > 1)
+                {
+                    constructor = null;
+                    existsConstructor = 0;
+                }
+
+                var (nameClass, namespaceClass) = NameAndNameSpace(cds);
+                var nl = Environment.NewLine;
+
+                var str = "";
+                str += $"namespace {namespaceClass}{nl}";
+                str += $"{{ {nl}";
+                str += $"public partial class {nameClass}{nl}";
+                str += $"{{ {nl}";
+                if (existsConstructor == 1)
+                {
+
+                }
+                else
+                {
+
+                }
+                str += $"{nl} }}//class";
+                str += $"{nl} }}//namespace";
+                context.AddSource($"{nameClass}_gen_class", str);
+
+            }
+        }
+
+        private void CreateForMethods(IncrementalGeneratorInitializationContext context)
+        {
             IncrementalValuesProvider<MethodDeclarationSyntax> paramDeclarations = context.SyntaxProvider
             .CreateSyntaxProvider(
-                predicate: static (s, _) => IsSyntaxTargetForGeneration(s), 
-                transform: static (ctx, _) => GetSemanticTargetForGeneration(ctx)) 
-            .Where(static m => m is not null)!; // filter out attributed enums that we don't care about
+                predicate: static (s, _) => IsSyntaxTargetForGenerationParameter(s),
+                transform: static (ctx, _) => GetSemanticTargetForGenerationMethods(ctx))
+            .Where(static m => m is not null)!; 
 
             IncrementalValueProvider<(Compilation, ImmutableArray<MethodDeclarationSyntax>)> compilationAndEnums = context.CompilationProvider.Combine(paramDeclarations.Collect());
 
             context.RegisterSourceOutput(compilationAndEnums,
-            static (spc, source) => Execute(source.Item1, source.Item2, spc));
-        }
+                static (spc, source) => Execute(source.Item1, source.Item2, spc));
 
+        }
+        private static Tuple<string,string> NameAndNameSpace(ClassDeclarationSyntax c)
+        {
+            var nameClass = c.Identifier.Text;
+            var p = c.Parent;
+            var namespaceClass = "";
+            while (true)
+            {
+                if (p is BaseNamespaceDeclarationSyntax bnsds)
+                {
+                    namespaceClass = bnsds.Name.ToFullString();
+                    break;
+                }
+                p = p?.Parent;
+                if (p == null)
+                    break;
+            }
+            return Tuple.Create(nameClass, namespaceClass);
+        }
         private static void Execute(Compilation compilation, ImmutableArray<MethodDeclarationSyntax> methods, SourceProductionContext context)
         {
             var mets = methods.Distinct().ToArray();
@@ -65,19 +166,8 @@ namespace RSCG_FunctionsWithDI
                 //spc.AddSource($"{cds.Key. })
                 
                 var c = cds.Key;
-                var nameClass = c.Identifier.Text;
-                var p = c.Parent;
-                var namespaceClass = "";
-                while (true)
-                {
-                    if(p is BaseNamespaceDeclarationSyntax bnsds)
-                    {
-                        namespaceClass = bnsds.Name.ToFullString();
-                        break;
-                    }
-                    p = p.Parent;
-                }
-
+                var (nameClass, namespaceClass) = NameAndNameSpace(c);
+                
                 var str = "";
                 str += $"namespace {namespaceClass}{nl}";
                 str += $"{{ {nl}";
@@ -157,15 +247,33 @@ namespace RSCG_FunctionsWithDI
                 }
                 str += $"{nl} }}//class";
                 str += $"{nl} }}//namespace";
-                context.AddSource($"{nameClass}_gen", str);
+                context.AddSource($"{nameClass}_gen_methods", str);
 
             }
 
         }
+        private static ClassDeclarationSyntax? GetSemanticTargetForGenerationClass(GeneratorSyntaxContext ctx)
+        {
+            var parameter = ctx.Node as MemberDeclarationSyntax;
+            if (parameter == null)
+                return null;
+            //todo: verify constructor
+            var parent = parameter.Parent;
+            while (parent as ClassDeclarationSyntax is null)
+            {
+                parent = parent?.Parent;
+                if (parent == null)//something wrong
+                    break;
+            }
+            return parent as ClassDeclarationSyntax;
 
-        private static MethodDeclarationSyntax? GetSemanticTargetForGeneration(GeneratorSyntaxContext ctx)
+
+        }
+        private static MethodDeclarationSyntax? GetSemanticTargetForGenerationMethods(GeneratorSyntaxContext ctx)
         {
             var parameter = ctx.Node as ParameterSyntax;
+            if (parameter == null)
+                return null;
             //todo: verify constructor
             var parent = parameter.Parent;
             while(parent as MethodDeclarationSyntax is null)
@@ -176,6 +284,56 @@ namespace RSCG_FunctionsWithDI
             }
             return parent as MethodDeclarationSyntax;
             
+
+        }
+        private static bool IsForDI(PropertyDeclarationSyntax parameter)
+        {
+            if (parameter == null)
+                return false;
+
+            var hasAttr = parameter.AttributeLists.Count > 0;
+
+            if (!hasAttr)
+                return false;
+
+            hasAttr = false;
+            foreach (var attr in parameter!.AttributeLists)
+            {
+                if (attr.ToFullString().Contains(nameAttr))
+                {
+                    hasAttr = true;
+
+                }
+            }
+            if (!hasAttr)
+                return false;
+
+            return true;
+
+        }
+        private static bool IsForDI(FieldDeclarationSyntax parameter)
+        {
+            if (parameter == null)
+                return false;
+
+            var hasAttr = parameter.AttributeLists.Count > 0;
+
+            if (!hasAttr)
+                return false;
+
+            hasAttr = false;
+            foreach (var attr in parameter!.AttributeLists)
+            {
+                if (attr.ToFullString().Contains(nameAttr))
+                {
+                    hasAttr = true;
+
+                }
+            }
+            if (!hasAttr)
+                return false;
+
+            return true;
 
         }
         private static bool IsForDI(ParameterSyntax parameter)
@@ -203,12 +361,30 @@ namespace RSCG_FunctionsWithDI
             return true;
 
         }
-
-        private static bool IsSyntaxTargetForGeneration(SyntaxNode s)
+        private static bool IsSyntaxTargetForGenerationClass(SyntaxNode s)
         {
-            
-            return IsForDI(s as ParameterSyntax);
+            var ret = false;
+            if (s is PropertyDeclarationSyntax pds)
+                ret = IsForDI(pds);
 
+            if (ret)
+                return true;
+
+            if (s is FieldDeclarationSyntax f)
+                ret = IsForDI(f);
+
+            if (ret)
+                return true;
+
+
+            return false;
+        }
+        private static bool IsSyntaxTargetForGenerationParameter(SyntaxNode s)
+        {
+                return IsForDI(s as ParameterSyntax);
+
+
+            
         }
     }
 }
