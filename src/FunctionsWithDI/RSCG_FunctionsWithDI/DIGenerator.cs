@@ -35,13 +35,15 @@ namespace RSCG_FunctionsWithDI
 
         private static void ExecuteForClass(Compilation item1, ImmutableArray<ClassDeclarationSyntax> cdsArr, SourceProductionContext context)
         {
-            Dictionary<ClassDeclarationSyntax, List<MemberDeclarationSyntax>> data = new();
-            foreach (var cds in cdsArr)
+            var dist = cdsArr.Distinct().ToArray();
+            foreach (var cds in dist)
             {
+                //name + type
+                Dictionary<string,string> nameAndType = new();
+
                 //find the constructor , as any
                 var existsConstructor = 0;
                 ConstructorDeclarationSyntax? constructor= null;
-                data.Add(cds, new List<MemberDeclarationSyntax>());
                 foreach (var child in cds.ChildNodes())
                 {
                     if(child is ConstructorDeclarationSyntax cdsChild)
@@ -54,22 +56,32 @@ namespace RSCG_FunctionsWithDI
                     {
                         if (!IsForDI(fds))
                             continue;
-                        data[cds].Add(fds);
+                        //data.Add(fds);
+                        var decl = fds.Declaration;
+                        var nameField = decl.Variables[0].Identifier.ValueText;
+                        var typeField = (decl.Type as IdentifierNameSyntax).Identifier.ValueText;
+                        nameAndType.Add(nameField, typeField);
+
                     }
                     if (child is PropertyDeclarationSyntax mds)
                     {
                         if (!IsForDI(mds))
                             continue;
-                        data[cds].Add(mds);
+                        //data.Add(mds);
+                        var name = mds;
+                        var nameProperty = mds.Identifier.ValueText;
+                        var typeProperty = (mds.Type as IdentifierNameSyntax).Identifier.ValueText;
+                        nameAndType.Add(nameProperty, typeProperty);
+
                     }
                 }
-
+                // find types and name to add to the constructor
                 if (existsConstructor > 1)
                 {
                     constructor = null;
                     existsConstructor = 0;
                 }
-
+                
                 var (nameClass, namespaceClass) = NameAndNameSpace(cds);
                 var nl = Environment.NewLine;
 
@@ -84,6 +96,16 @@ namespace RSCG_FunctionsWithDI
                 }
                 else
                 {
+                    str += $"public {nameClass}   {nl}";
+                    var strParameters = 
+                        string.Join(",",
+                        nameAndType
+                        .Select(it => it.Value + " " + it.Key)
+                        .ToArray()
+                        );
+                    str += $"( {strParameters} ) {nl}";
+                    str += $"{{ {nl}";
+                    str += $"}}//end constructor {nl}";
 
                 }
                 str += $"{nl} }}//class";
