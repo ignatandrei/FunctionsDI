@@ -15,8 +15,8 @@
 		<ProjectReference Include="..\RSCG_FunctionsWithDI\RSCG_FunctionsWithDI.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
 		<ProjectReference Include="..\RSCG_FunctionsWithDI_Base\RSCG_FunctionsWithDI_Base.csproj" />
 
-		<!--<PackageReference Include="RSCG_FunctionsWithDI" Version="2022.6.19.1605" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
-		<PackageReference Include="RSCG_FunctionsWithDI_Base" Version="2022.6.19.1605" />-->
+		<!--<PackageReference Include="RSCG_FunctionsWithDI" Version="2022.7.4.34" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+		<PackageReference Include="RSCG_FunctionsWithDI_Base" Version="2022.7.4.34" />-->
 
 
 	</ItemGroup>
