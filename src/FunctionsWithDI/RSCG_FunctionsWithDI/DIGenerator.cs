@@ -33,12 +33,21 @@ namespace RSCG_FunctionsWithDI
                 static (spc, source) => ExecuteForClass(source.Item1, source.Item2, spc));
 
         }
-
-        private static void ExecuteForClass(Compilation item1, ImmutableArray<ClassDeclarationSyntax> cdsArr, SourceProductionContext context)
+        private static string? FullTypeVar(SemanticModel sem,TypeSyntax ts)
         {
+            var typeInfo = sem.GetTypeInfo(ts);
+            var theType = ((INamedTypeSymbol)typeInfo.Type);
+
+            var typeField = theType.ToDisplayString();
+            return typeField;
+        }
+        private static void ExecuteForClass(Compilation comp, ImmutableArray<ClassDeclarationSyntax> cdsArr, SourceProductionContext context)
+        {
+            
             var dist = cdsArr.Distinct().ToArray();
             foreach (var cds in dist)
             {
+                var sem = comp.GetSemanticModel(cds.SyntaxTree);
                 //name + type
                 Dictionary<string,string> nameAndType = new();
 
@@ -60,7 +69,9 @@ namespace RSCG_FunctionsWithDI
                         //data.Add(fds);
                         var decl = fds.Declaration;
                         var nameField = decl.Variables[0].Identifier.ValueText;
-                        var typeField = (decl.Type as IdentifierNameSyntax).Identifier.ValueText;
+                        //var typeField = (decl.Type as IdentifierNameSyntax)?.Identifier.ValueText;
+                        
+                        var typeField = FullTypeVar(sem,decl.Type);
                         nameAndType.Add(nameField, typeField);
 
                     }
@@ -71,7 +82,7 @@ namespace RSCG_FunctionsWithDI
                         //data.Add(mds);
                         var name = mds;
                         var nameProperty = mds.Identifier.ValueText;
-                        var typeProperty = (mds.Type as IdentifierNameSyntax).Identifier.ValueText;
+                        var typeProperty = FullTypeVar(sem,mds.Type);
                         nameAndType.Add(nameProperty, typeProperty);
 
                     }
