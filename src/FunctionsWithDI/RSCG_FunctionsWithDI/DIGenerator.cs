@@ -84,11 +84,15 @@ namespace RSCG_FunctionsWithDI
                 }
                 
                 var (nameClass, namespaceClass) = NameAndNameSpace(cds);
+                var existNamespace = namespaceClass?.Length > 0;
                 var nl = Environment.NewLine;
 
                 var str = "";
-                str += $"namespace {namespaceClass}{nl}";
-                str += $"{{ {nl}";
+                if (existNamespace)
+                {
+                    str += $"namespace {namespaceClass}{nl}";
+                    str += $"{{ {nl}";
+                }
                 str += $"public partial class {nameClass}{nl}";
                 str += $"{{ {nl}";
                 if (existsConstructor == 1)
@@ -149,7 +153,11 @@ namespace RSCG_FunctionsWithDI
 
                 }
                 str += $"{nl} }}//class";
-                str += $"{nl} }}//namespace";
+                if (existNamespace)
+                {
+                    str += $"{nl} }}//namespace";
+                }
+
                 context.AddSource($"{nameClass}_gen_class", str);
 
             }
