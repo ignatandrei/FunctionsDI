@@ -1,6 +1,5 @@
 ﻿
 using RSCG_FunctionsWithDI_Base;
-
 namespace TestFunctionsWithDI
 {
     public class TestDI1

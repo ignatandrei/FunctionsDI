@@ -33,12 +33,19 @@ namespace RSCG_FunctionsWithDI
                 static (spc, source) => ExecuteForClass(source.Item1, source.Item2, spc));
 
         }
-        private static string? FullTypeVar(SemanticModel sem,TypeSyntax ts)
+        private static string? FullTypeVar(SemanticModel? sem,TypeSyntax? ts)
         {
+            if (sem == null)
+                return null;
+            if (ts is null)
+                return null;
             var typeInfo = sem.GetTypeInfo(ts);
+            if (typeInfo.Type is null)
+                return null;
+
             var theType = ((INamedTypeSymbol)typeInfo.Type);
 
-            var typeField = theType.ToDisplayString();
+            var typeField = theType?.ToDisplayString();
             return typeField;
         }
         private static void ExecuteForClass(Compilation comp, ImmutableArray<ClassDeclarationSyntax> cdsArr, SourceProductionContext context)
@@ -47,6 +54,16 @@ namespace RSCG_FunctionsWithDI
             var dist = cdsArr.Distinct().ToArray();
             foreach (var cds in dist)
             {
+                //SyntaxList<UsingDirectiveSyntax> usings ;
+                
+                //foreach (var parent in cds.GetReference().GetSyntax().Ancestors(false))
+                //{
+                //    if (parent is BaseNamespaceDeclarationSyntax b)
+                //    {
+                //        usings = b.Usings;
+                //    }
+                //}
+
                 var sem = comp.GetSemanticModel(cds.SyntaxTree);
                 //name + type
                 Dictionary<string,string> nameAndType = new();
@@ -110,28 +127,45 @@ namespace RSCG_FunctionsWithDI
                 {
 
                     var paramsList = constructor!.ParameterList;
-                    var args = paramsList.ToFullString();
-                    var argsConstructorBase = 
-                        string.Join(",",
+                    var argsArray = paramsList.Parameters
+                        .Select(it=>new {type = FullTypeVar(sem, it.Type),name= it.Identifier.ValueText})
+                        .Where(it=>it.type != null)
+                        .ToArray()
+                        ;
+
+                    var argsConstructorBase = string.Join(",",
                         paramsList.Parameters
-                        .Select(it=>it.Identifier.ValueText)
+                        .Select(it => it.Identifier.ValueText)
+                        .ToArray()
+                        );
+                    var argsConstructorNew = 
+                        string.Join(",",
+                        argsArray
+                        .Select(it=>it.type + " "+ it.name)
                         .ToArray()
                         )
                         ;
-                    //remove )
-                    while (!args.EndsWith(")"))
+                    var args = "(";
+                    bool existsPrev = argsConstructorNew?.Length > 0;
+                    if (existsPrev)
                     {
-                        args = args.Substring(0, args.Length - 1);
+                        args += argsConstructorNew;
                     }
-                    args = args.Substring(0, args.Length - 1);
-                    foreach (var item in nameAndType)
+
+                    var newArgs= 
+                        string.Join(",",
+                        nameAndType.Select(item=> $"{item.Value} _{item.Key}")
+                        .ToArray()
+                        );
+                    if (newArgs?.Length > 0)
                     {
-                        //var p = SyntaxFactory
-                        //    .Parameter(SyntaxFactory.Identifier($"_{item.Key}"))
-                        //    .WithType(SyntaxFactory.ParseTypeName(item.Value));
-                        //paramsList.Parameters.Add(p);
-                        args += $", {item.Value} _{item.Key}";
+                        if (existsPrev) args += ",";
+                        args += newArgs;
                     }
+                    //foreach (var item in nameAndType)
+                    //{
+                    //    args += $", {item.Value} _{item.Key}";
+                    //}
                     args += ")";
 
                     str += $"public {nameClass}   {nl}";
