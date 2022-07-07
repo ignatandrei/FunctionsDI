@@ -48,7 +48,28 @@ namespace RSCG_FunctionsWithDI
             var typeField = theType?.ToDisplayString();
             return typeField;
         }
+        #region diagnostic
+        private static readonly string DiagnosticId = "DIFunction";
+        private static readonly string Title = "DIFunction";
+        private static readonly string Category = "DIFunction";
+
+        #endregion
         private static void ExecuteForClass(Compilation comp, ImmutableArray<ClassDeclarationSyntax> cdsArr, SourceProductionContext context)
+        {
+
+            try
+            {
+                ExecuteForClassDirect(comp, cdsArr, context);
+            }
+            catch(Exception ex)
+            {
+                var dd = new DiagnosticDescriptor(DiagnosticId, Title, ex.Message, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: ex.ToString());
+                Location? loc = null;
+                var dg = Diagnostic.Create(dd,loc);
+                context.ReportDiagnostic(dg);
+            }
+        }
+        private static void ExecuteForClassDirect(Compilation comp, ImmutableArray<ClassDeclarationSyntax> cdsArr, SourceProductionContext context)
         {
             
             var dist = cdsArr.Distinct().ToArray();
@@ -241,6 +262,20 @@ namespace RSCG_FunctionsWithDI
             return Tuple.Create(nameClass, namespaceClass);
         }
         private static void Execute(Compilation compilation, ImmutableArray<MethodDeclarationSyntax> methods, SourceProductionContext context)
+        {
+            try
+            {
+                ExecuteDirect(compilation, methods, context);
+            }
+            catch (Exception ex)
+            {
+                var dd = new DiagnosticDescriptor(DiagnosticId, Title, ex.Message, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: ex.ToString());
+                Location? loc = null;
+                var dg = Diagnostic.Create(dd, loc);
+                context.ReportDiagnostic(dg);
+            }
+        }
+        private static void ExecuteDirect(Compilation compilation, ImmutableArray<MethodDeclarationSyntax> methods, SourceProductionContext context)
         {
             var mets = methods.Distinct().ToArray();
             var x = mets.Length;
