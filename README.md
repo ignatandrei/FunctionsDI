@@ -11,8 +11,8 @@ Reference into the csproj
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="RSCG_FunctionsWithDI" Version="2022.7.4.34" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
-    <PackageReference Include="RSCG_FunctionsWithDI_Base" Version="2022.7.4.34" />
+    <PackageReference Include="RSCG_FunctionsWithDI" Version="2022.7.7.636" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+    <PackageReference Include="RSCG_FunctionsWithDI_Base" Version="2022.7.7.636" />
 </ItemGroup> 	
 <PropertyGroup>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
@@ -73,8 +73,8 @@ Console.WriteLine(test.TestMyFunc1(10,3)); // calling without the [FromServices]
 # Usage 2 - generate constructors from fields / constructors
 ```xml
 <ItemGroup>
-    <PackageReference Include="RSCG_FunctionsWithDI" Version="2022.7.4.34" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
-    <PackageReference Include="RSCG_FunctionsWithDI_Base" Version="2022.7.4.34" />
+    <PackageReference Include="RSCG_FunctionsWithDI" Version="2022.7.7.636" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+    <PackageReference Include="RSCG_FunctionsWithDI_Base" Version="2022.7.7.636" />
 </ItemGroup>	
 <PropertyGroup>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
